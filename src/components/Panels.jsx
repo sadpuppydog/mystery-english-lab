@@ -47,7 +47,7 @@ export function ClueZoom({ stage, clue, onClose }) {
   return (
     <Modal onClose={onClose} width={940} style={{ maxWidth: 940, padding: 28 }}>
       <div style={{ display: 'grid', gridTemplateColumns: '530px 1fr', gap: 28 }}>
-        <Photo label={clue.photo} h={360} />
+        <Photo label={clue.photo} src={clue.image} h={360} />
         <div className="col">
           <div className="row gap12" style={{ marginBottom: 14 }}>
             <span className="serif" style={{ fontWeight: 800, fontSize: 18 }}>{stage === 1 ? `線索${'一二三四五'[clue.n - 1]}` : clue.short}</span>
@@ -84,7 +84,7 @@ export function EvidenceFolder({ onClose, onZoom }) {
                 {on ? <span className="pill pill-green">已取得</span> : <span className="pill pill-dark"><Icon name="lock" size={11} />{fmt(th[i])} 分</span>}
               </div>
               {on ? <>
-                <Photo label={c.photo} h={130} />
+                <Photo label={c.photo} src={c.image} h={130} />
                 <div style={{ fontWeight: 700, fontSize: 14 }}>{c.title}</div>
                 <div style={{ fontSize: 14, lineHeight: 1.55 }}>「{c.quote}」</div>
                 <div className="small muted">{c.source}</div>
@@ -183,7 +183,7 @@ export function QueueModal() {
           <span className="pill pill-gold">線索 {m.index} / {clues.length}</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 22 }}>
-          <Photo label={c.photo} h={220} />
+          <Photo label={c.photo} src={c.image} h={220} />
           <div className="col gap8">
             <div className="kicker">EVIDENCE 0{m.index}</div>
             <div className="small muted">{c.source}</div>

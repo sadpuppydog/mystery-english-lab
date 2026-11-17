@@ -93,12 +93,13 @@ export function Confirm({ title, text, okLabel = '確定', cancelLabel = '取消
   );
 }
 
-export function Photo({ label, w = '100%', h = 160, style }) {
+export function Photo({ label, src, w = '100%', h = 160, style }) {
   const character = ['Alex', 'Emma', 'Kevin', 'Sophia'].includes(label);
+  const image = src || (character ? `/characters/${label}.png` : null);
   return (
     <div className="photo" style={{ width: w, height: h, ...style }}>
-      {character ? (
-        <img className="photo-character" src={`/characters/${label}.png`} alt={`${label} 的照片`} />
+      {image ? (
+        <img className="photo-character" src={image} alt={`${label} 的照片`} />
       ) : (
         <><Icon name="photo" size={34} stroke={1.5} /><span>[照片：{label}]</span></>
       )}
