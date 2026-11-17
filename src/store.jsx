@@ -12,7 +12,13 @@ export const useGame = () => useContext(Ctx);
 const EMPTY = { screen: 'login', params: {}, user: null, stage: 1, stages: {}, results: {}, modals: [] };
 
 export function GameProvider({ children }) {
-  const [s, setS] = useState(EMPTY);
+  const [s, setS] = useState(() => {
+    if (new URLSearchParams(window.location.search).get('preview') !== 'clues') return EMPTY;
+    const stage = newStageState(1, 5);
+    stage.learning = 1500;
+    stage.seenClues = 5;
+    return { ...EMPTY, screen: 'board', user: { account: 'clue-preview', name: '訪客', guest: true }, stages: { 1: stage } };
+  });
   const ref = useRef(s);
   ref.current = s;
 
