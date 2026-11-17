@@ -94,10 +94,14 @@ export function Confirm({ title, text, okLabel = '確定', cancelLabel = '取消
 }
 
 export function Photo({ label, w = '100%', h = 160, style }) {
+  const character = ['Alex', 'Emma', 'Kevin', 'Sophia'].includes(label);
   return (
     <div className="photo" style={{ width: w, height: h, ...style }}>
-      <Icon name="photo" size={34} stroke={1.5} />
-      <span>[照片：{label}]</span>
+      {character ? (
+        <img className="photo-character" src={`/characters/${label}.jpg`} alt={`${label} 的照片`} />
+      ) : (
+        <><Icon name="photo" size={34} stroke={1.5} /><span>[照片：{label}]</span></>
+      )}
     </div>
   );
 }
