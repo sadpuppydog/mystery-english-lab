@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGame } from '../store.jsx';
 import { STAGES, REMEDIAL, FINAL_TEXT } from '../data/story.js';
 import { stageClues, unlockedCount, baseGameScore, challengedCount, fmt, stars } from '../game.js';
@@ -95,12 +95,17 @@ export function AfterReason() {
 export function Reveal() {
   const { s, A } = useGame();
   const S = STAGES[s.stage]; const R = S.reveal;
+  const videoRef = useRef(null);
+  const [videoTime, setVideoTime] = useState(0);
+  const [videoDuration, setVideoDuration] = useState(0);
+  const [videoDone, setVideoDone] = useState(false);
+  const [videoSkipped, setVideoSkipped] = useState(false);
   const total = s.stage === 1 ? 9 : 10;
   const [t, setT] = useState(0);
-  useEffect(() => { if (t >= total) return; const x = setTimeout(() => setT((v) => v + 0.25), 250); return () => clearTimeout(x); }, [t]);
+  useEffect(() => { if (s.stage === 1 || t >= total) return; const x = setTimeout(() => setT((v) => v + 0.25), 250); return () => clearTimeout(x); }, [s.stage, t]);
   const n = s.stage === 1 ? R.scenes.length : R.suspects.length;
   const shown = Math.min(n, Math.floor((t / total) * (n + 0.6)) + 1);
-  const done = t >= total;
+  const done = s.stage === 1 ? videoDone : t >= total;
   const sec = (v) => `0:${String(Math.floor(v * 5)).padStart(2, '0')}`;
   return (
     <div className="screen" style={{ background: 'rgba(10,6,3,.55)' }}>
@@ -108,14 +113,17 @@ export function Reveal() {
         <div className="kicker" style={{ color: 'var(--gold2)' }}>{R.tag}</div>
         <div className="serif" style={{ fontSize: 34, fontWeight: 900, color: '#f3e6c8', marginTop: 6 }}>{R.title}</div>
       </div>
+      {s.stage === 1 ? (
+        <video ref={videoRef} className="reveal-video" controls preload="metadata" aria-label="第一關犯案方式揭曉影片"
+          onLoadedMetadata={(e) => setVideoDuration(e.currentTarget.duration)}
+          onTimeUpdate={(e) => setVideoTime(e.currentTarget.currentTime)}
+          onEnded={() => setVideoDone(true)}>
+          <source src="/videos/reveal-stage1.mp4" type="video/mp4" />
+          你的瀏覽器不支援影片播放。
+        </video>
+      ) : (
       <div style={{ position: 'absolute', left: 60, right: 60, top: 140, display: 'grid', gridTemplateColumns: `repeat(${n}, 1fr)`, gap: 20 }}>
-        {s.stage === 1 ? R.scenes.map((sc, i) => (
-          <div key={i} className={`panel scene ${i < shown ? 'on' : ''}`} style={{ padding: 18 }}>
-            <Photo label={sc.title} h={220} />
-            <div className="row gap8" style={{ marginTop: 14 }}><span className="badge-letter" style={{ background: 'var(--red)' }}>0{i + 1}</span><b className="serif" style={{ fontSize: 18 }}>{sc.title}</b></div>
-            <p style={{ marginTop: 10, lineHeight: 1.7, color: 'var(--ink2)' }}>{sc.text}</p>
-          </div>
-        )) : R.suspects.map((p, i) => (
+        {R.suspects.map((p, i) => (
           <div key={i} className={`panel scene ${i < shown ? 'on' : ''}`} style={{ padding: 16, border: p.verdict === '兇手' ? '3px solid var(--red)' : undefined }}>
             <Photo label={p.name} h={170} />
             <div className="row" style={{ marginTop: 12, justifyContent: 'space-between' }}>
@@ -126,11 +134,12 @@ export function Reveal() {
           </div>
         ))}
       </div>
+      )}
       <div style={{ position: 'absolute', left: 60, right: 60, bottom: 40 }} className="row gap16">
-        <span className="small" style={{ color: '#e8dbbd' }}>{done ? '動畫播放完畢' : '動畫播放中'}</span>
-        <div className="reveal-bar grow"><i style={{ width: `${(t / total) * 100}%` }} /></div>
-        <span className="small" style={{ color: '#e8dbbd', width: 90 }}>{sec(t)} / {sec(total)}</span>
-        <button className="btn btn-ghost-light btn-sm" onClick={() => setT(total)} disabled={done}>略過</button>
+        <span className="small" style={{ color: '#e8dbbd' }}>{s.stage === 1 ? videoSkipped ? '已略過影片' : done ? '影片播放完畢' : '按播放觀看影片' : done ? '動畫播放完畢' : '動畫播放中'}</span>
+        <div className="reveal-bar grow"><i style={{ width: `${((s.stage === 1 ? (videoDuration ? videoTime / videoDuration : 0) : t / total) * 100)}%` }} /></div>
+        <span className="small" style={{ color: '#e8dbbd', width: 90 }}>{s.stage === 1 ? `${Math.floor(videoTime / 60)}:${String(Math.floor(videoTime % 60)).padStart(2, '0')} / ${Math.floor(videoDuration / 60)}:${String(Math.floor(videoDuration % 60)).padStart(2, '0')}` : `${sec(t)} / ${sec(total)}`}</span>
+        <button className="btn btn-ghost-light btn-sm" onClick={() => { if (s.stage === 1) { videoRef.current?.pause(); setVideoTime(videoDuration); setVideoSkipped(true); setVideoDone(true); } else setT(total); }} disabled={done}>略過</button>
         <button className="btn btn-gold" disabled={!done} onClick={() => A.go('settle')}>{STAGES[s.stage].label}結算</button>
       </div>
     </div>

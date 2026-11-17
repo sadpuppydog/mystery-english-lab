@@ -240,6 +240,7 @@ input { font: inherit; }
 .photo:has(.photo-character) { padding: 0; overflow: hidden; }
 .photo-character { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .prologue-video { display: block; width: 100%; height: 220px; border-radius: 3px; background: #1f1b17; object-fit: contain; }
+.reveal-video { position: absolute; left: 60px; top: 140px; width: calc(100% - 120px); height: 420px; background: #100d0b; object-fit: contain; }
 
 /* 揭曉動畫 */
 .reveal-bar { height: 4px; background: rgba(255,255,255,.15); border-radius: 2px; overflow: hidden; }
