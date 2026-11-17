@@ -98,7 +98,7 @@ export function Photo({ label, w = '100%', h = 160, style }) {
   return (
     <div className="photo" style={{ width: w, height: h, ...style }}>
       {character ? (
-        <img className="photo-character" src={`/characters/${label}.jpg`} alt={`${label} 的照片`} />
+        <img className="photo-character" src={`/characters/${label}.png`} alt={`${label} 的照片`} />
       ) : (
         <><Icon name="photo" size={34} stroke={1.5} /><span>[照片：{label}]</span></>
       )}
