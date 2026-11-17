@@ -57,7 +57,10 @@ export function Prologue() {
         <div className="col gap16">
           <div className="kicker">PROLOGUE・開場動畫</div>
           <div className="small muted">{PROLOGUE.time}</div>
-          <Photo label="深夜的英語學習實驗室" h={220} />
+          <video className="prologue-video" controls preload="metadata" aria-label="遊戲前導影片">
+            <source src="/videos/prologue.mp4" type="video/mp4" />
+            你的瀏覽器不支援影片播放。
+          </video>
           <p className="pre" style={{ fontSize: 16, lineHeight: 1.85 }}>{PROLOGUE.text}</p>
           <div className="card" style={{ padding: '14px 18px', background: '#2a221b', color: '#f3e6c8', borderColor: '#2a221b' }}>
             <div className="small" style={{ color: 'var(--gold2)', fontWeight: 700, marginBottom: 6 }}>教授留下的訊息</div>
