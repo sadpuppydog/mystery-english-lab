@@ -23,7 +23,7 @@ export function EventIntro() {
             <div className="small" style={{ color: 'var(--red)', fontWeight: 700, marginTop: 8 }}>失敗　扣 20 金幣・此格標記為失敗格</div>
           </div>
         </div>
-        <p className="small muted">事件格是支線，提供案件補充資訊；不挑戰也能完成主線推理。接受後先進入準備階段，可查看背包、去商店買道具；準備好再按正式開始，開始後不能離開。</p>
+        <p className="small muted">事件格是支線，提供案件補充資訊；略過後可返回盤面，之後點此格重新挑戰。接受後先進入準備階段，可查看背包、去商店買道具；準備好再按正式開始，開始後不能離開。</p>
         <div className="row gap12" style={{ marginTop: 'auto' }}>
           <button className="btn btn-line grow" onClick={() => A.declineEvent(key)}>拒絕挑戰（略過此格）</button>
           <button className="btn btn-red grow" onClick={() => A.go('eventPrep', { key })}>接受挑戰，進入準備</button>

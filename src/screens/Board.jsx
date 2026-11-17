@@ -66,7 +66,7 @@ export default function Board() {
       if (isEventId(id)) setOverlay({ alert: { title: '事件已完成', text: `事件紙條已放進背包：\n「${EVENTS[id].note}」` } });
       else A.go('review', { key });
     } else if (c.status === 'fail') setOverlay({ alert: { title: '挑戰失敗', text: '這格已標記為失敗格，不能重新挑戰。\n去挑戰其他格子吧！', button: '去挑戰其他格子' } });
-    else if (c.status === 'skip') setOverlay({ alert: { title: '已略過這個事件', text: '事件格是支線，略過也能完成主線推理。' } });
+    else if (c.status === 'skip') A.go('eventIntro', { key });
     else if (c.status === 'progress') A.startCell(key);
     else if (c.status === 'event') A.startEvent(key);
     else setToast('格子由「抽格子」隨機決定，按右下角的按鈕抽一格吧！');
@@ -107,7 +107,7 @@ export default function Board() {
                 let stateText = null;
                 if (cell.status === 'done') stateText = '✓ 已完成';
                 else if (cell.status === 'fail') stateText = '✕ 失敗';
-                else if (cell.status === 'skip') stateText = '已略過';
+                else if (cell.status === 'skip') stateText = '可再挑戰';
                 else if (cell.status === 'progress') stateText = `作答中 ${cell.q}/3`;
                 else if (cell.status === 'event') stateText = '挑戰中';
                 const cls = ['cell', ev ? 'event' : '', cell.status === 'open' ? '' : cell.status === 'event' ? 'progress' : cell.status,
