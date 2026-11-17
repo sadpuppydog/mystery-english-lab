@@ -132,11 +132,7 @@ export default function Board() {
           <span><i style={{ background: '#dcc9b4', borderColor: 'var(--red)' }} />失敗</span>
         </div>
         <div className="draw-area">
-          {prog ? (
-            <button className="draw-btn continue" onClick={() => onCell(prog)}>
-              <Icon name="play" />繼續：{cellLabel(prog)} {cellName(cellId(prog)).zh}
-            </button>
-          ) : endAction ? (
+          {endAction ? (
             <button className="draw-btn" onClick={endAction.go}><Icon name="info" />{endAction.label}</button>
           ) : (
             <>
