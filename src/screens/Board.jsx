@@ -110,7 +110,7 @@ export default function Board() {
                 else if (cell.status === 'skip') stateText = '可再挑戰';
                 else if (cell.status === 'progress') stateText = `作答中 ${cell.q}/3`;
                 else if (cell.status === 'event') stateText = '挑戰中';
-                const cls = ['cell', ev ? 'event' : '', cell.status === 'open' ? '' : cell.status === 'event' ? 'progress' : cell.status,
+                const cls = ['cell', ev ? 'event' : '', ['progress', 'event'].includes(cell.status) ? 'cell-in-progress' : cell.status === 'open' ? '' : cell.status,
                   flash === key ? 'flash' : '', landed === key || (showPending && pending === key) ? 'landed' : '',
                   lineKeys.has(key) ? 'in-line' : '', cell.status !== 'open' ? 'clickable' : ''].join(' ');
                 return (

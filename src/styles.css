@@ -124,8 +124,8 @@ input { font: inherit; }
 .cell.event.done .zh-name { color: #45512d; }
 .cell.skip { background: var(--redbg); border-style: dashed; border-color: #c46a5b; }
 .cell.skip .zh-name, .cell.skip .en-name, .cell.skip .state { color: #8f2c20; }
-.cell.progress { border: 2px dashed var(--gold); background: #fbf3df; }
-.cell.progress .state { color: var(--goldd); }
+.cell.cell-in-progress { border: 2px dashed var(--gold); background: #fbf3df; }
+.cell.cell-in-progress .state { color: var(--goldd); }
 .cell.clickable { cursor: pointer; }
 .cell.clickable:hover { box-shadow: 0 0 0 2px rgba(201,162,74,.6); }
 .cell.flash { box-shadow: 0 0 0 3px var(--gold), 0 0 18px rgba(226,192,107,.9); transform: scale(1.04); z-index: 2; background: #fff5d8; }
