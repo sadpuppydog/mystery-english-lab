@@ -96,10 +96,7 @@ export function Reveal() {
   const { s, A } = useGame();
   const S = STAGES[s.stage]; const R = S.reveal;
   const videoRef = useRef(null);
-  const [videoTime, setVideoTime] = useState(0);
-  const [videoDuration, setVideoDuration] = useState(0);
   const [videoDone, setVideoDone] = useState(false);
-  const [videoSkipped, setVideoSkipped] = useState(false);
   const total = s.stage === 1 ? 9 : 10;
   const [t, setT] = useState(0);
   useEffect(() => { if (s.stage === 1 || t >= total) return; const x = setTimeout(() => setT((v) => v + 0.25), 250); return () => clearTimeout(x); }, [s.stage, t]);
@@ -115,8 +112,6 @@ export function Reveal() {
       </div>
       {s.stage === 1 ? (
         <video ref={videoRef} className="reveal-video" controls preload="metadata" aria-label="第一關犯案方式揭曉影片"
-          onLoadedMetadata={(e) => setVideoDuration(e.currentTarget.duration)}
-          onTimeUpdate={(e) => setVideoTime(e.currentTarget.currentTime)}
           onEnded={() => setVideoDone(true)}>
           <source src="/videos/reveal-stage1.mp4" type="video/mp4" />
           你的瀏覽器不支援影片播放。
@@ -136,10 +131,12 @@ export function Reveal() {
       </div>
       )}
       <div style={{ position: 'absolute', left: 60, right: 60, bottom: 40 }} className="row gap16">
-        <span className="small" style={{ color: '#e8dbbd' }}>{s.stage === 1 ? videoSkipped ? '已略過影片' : done ? '影片播放完畢' : '按播放觀看影片' : done ? '動畫播放完畢' : '動畫播放中'}</span>
-        <div className="reveal-bar grow"><i style={{ width: `${((s.stage === 1 ? (videoDuration ? videoTime / videoDuration : 0) : t / total) * 100)}%` }} /></div>
-        <span className="small" style={{ color: '#e8dbbd', width: 90 }}>{s.stage === 1 ? `${Math.floor(videoTime / 60)}:${String(Math.floor(videoTime % 60)).padStart(2, '0')} / ${Math.floor(videoDuration / 60)}:${String(Math.floor(videoDuration % 60)).padStart(2, '0')}` : `${sec(t)} / ${sec(total)}`}</span>
-        <button className="btn btn-ghost-light btn-sm" onClick={() => { if (s.stage === 1) { videoRef.current?.pause(); setVideoTime(videoDuration); setVideoSkipped(true); setVideoDone(true); } else setT(total); }} disabled={done}>略過</button>
+        {s.stage === 1 ? <span className="grow" /> : <>
+          <span className="small" style={{ color: '#e8dbbd' }}>{done ? '動畫播放完畢' : '動畫播放中'}</span>
+          <div className="reveal-bar grow"><i style={{ width: `${(t / total) * 100}%` }} /></div>
+          <span className="small" style={{ color: '#e8dbbd', width: 90 }}>{sec(t)} / {sec(total)}</span>
+        </>}
+        <button className="btn btn-ghost-light btn-sm" onClick={() => { if (s.stage === 1) { videoRef.current?.pause(); setVideoDone(true); } else setT(total); }} disabled={done}>略過</button>
         <button className="btn btn-gold" disabled={!done} onClick={() => A.go('settle')}>{STAGES[s.stage].label}結算</button>
       </div>
     </div>
