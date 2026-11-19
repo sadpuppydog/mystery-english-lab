@@ -294,18 +294,18 @@ export function RemedialDone() {
 // ---------- 最終結算 ----------
 export function Final() {
   const { s, A } = useGame();
-  const r1 = s.results[1]; const r2 = s.results[2];
+  const r1 = s.results[1] ?? null; const r2 = s.results[2] ?? null;
   const [rec, setRec] = useState(false);
-  const total = r1.learning + r2.learning;
-  const gameTotal = (r1.game || 0) + (r2.game || 0);
-  const res = (r) => (r.route === 'reason' ? `${r.correct ? '正確' : '錯誤'}（${r.clueCount} 線索）` : r.route === 'skip' ? '未推理' : '補救學習');
+  const total = (r1?.learning ?? 0) + (r2?.learning ?? 0);
+  const gameTotal = (r1?.game ?? 0) + (r2?.game ?? 0);
+  const res = (r) => !r ? '尚無紀錄' : r.route === 'reason' ? `${r.correct ? '正確' : '錯誤'}（${r.clueCount} 線索）` : r.route === 'skip' ? '未推理' : '補救學習';
   return (
     <div className="screen">
       <div style={{ position: 'absolute', left: 0, right: 0, top: 24, textAlign: 'center' }}>
         <div className="kicker" style={{ color: 'var(--gold2)' }}>CASE CLOSED</div>
         <div className="serif" style={{ fontSize: 40, fontWeight: 900, color: '#f3e6c8', margin: '4px 0 10px' }}>案件真相大白</div>
         <div className="row gap16" style={{ justifyContent: 'center' }}>
-          <span className="serif" style={{ color: '#f3e6c8', fontSize: 20, fontWeight: 700 }}>星級評價</span><Stars n={stars(total)} />
+          <span className="serif" style={{ color: '#f3e6c8', fontSize: 20, fontWeight: 700 }}>{r1 && r2 ? '星級評價' : '目前星級'}</span><Stars n={stars(total)} />
         </div>
       </div>
       <div className="panel" style={{ position: 'absolute', left: 48, top: 190, width: 470, height: 420, padding: 24 }}>
@@ -320,12 +320,13 @@ export function Final() {
         <table className="result">
           <thead><tr><th>關卡</th><th style={{ textAlign: 'right' }}>推理結果</th><th style={{ textAlign: 'right' }}>學習分數</th><th style={{ textAlign: 'right' }}>遊戲分數</th></tr></thead>
           <tbody>
-            <tr><td>第一關｜犯案方式</td><td className="num" style={{ fontWeight: 700 }}>{res(r1)}</td><td className="num">{fmt(r1.learning)}</td><td className="num">{r1.game === null ? '—' : fmt(r1.game)}</td></tr>
-            <tr><td>第二關｜真正兇手</td><td className="num" style={{ fontWeight: 700 }}>{res(r2)}</td><td className="num">{fmt(r2.learning)}</td><td className="num">{r2.game === null ? '—' : fmt(r2.game)}</td></tr>
+            <tr><td>第一關｜犯案方式</td><td className="num" style={{ fontWeight: 700 }}>{res(r1)}</td><td className="num">{r1 ? fmt(r1.learning) : '—'}</td><td className="num">{r1?.game == null ? '—' : fmt(r1.game)}</td></tr>
+            <tr><td>第二關｜真正兇手</td><td className="num" style={{ fontWeight: 700 }}>{res(r2)}</td><td className="num">{r2 ? fmt(r2.learning) : '—'}</td><td className="num">{r2?.game == null ? '—' : fmt(r2.game)}</td></tr>
             <tr><td className="serif" style={{ fontSize: 22, fontWeight: 800 }}>總計</td><td /><td className="num" style={{ fontSize: 24 }}>{fmt(total)}</td><td className="num" style={{ fontSize: 24 }}>{fmt(gameTotal)}</td></tr>
           </tbody>
         </table>
-        <p className="small muted" style={{ marginTop: 'auto', lineHeight: 1.6 }}>星級依兩關學習分數合計：5★ 6,000 以上・4★ 5,000–5,999・3★ 3,600–4,999・2★ 2,400–3,599・1★ 2,399 以下<br />協助分數：第一關剩 {fmt(r1.assist)}・第二關剩 {fmt(r2.assist)}（不計入星級，提供學習分析使用）</p>
+        {(!r1 || !r2) && <p className="small muted" style={{ marginTop: 12 }}>尚無紀錄的關卡未計入總分；完成兩關後才會顯示完整結算。</p>}
+        <p className="small muted" style={{ marginTop: 'auto', lineHeight: 1.6 }}>星級依兩關學習分數合計：5★ 6,000 以上・4★ 5,000–5,999・3★ 3,600–4,999・2★ 2,400–3,599・1★ 2,399 以下<br />協助分數：第一關{r1 ? `剩 ${fmt(r1.assist)}` : '尚無紀錄'}・第二關{r2 ? `剩 ${fmt(r2.assist)}` : '尚無紀錄'}（不計入星級，提供學習分析使用）</p>
       </div>
       <div className="row gap16" style={{ position: 'absolute', left: 0, right: 0, bottom: 40, justifyContent: 'center' }}>
         <button className="btn btn-dark" style={{ width: 180 }} onClick={() => setRec(true)}>查看學習紀錄</button>
@@ -334,7 +335,7 @@ export function Final() {
       {rec && (
         <Modal width={620} onClose={() => setRec(false)}>
           <div className="modal-title">學習紀錄</div>
-          {[[1, r1, '犯案方式'], [2, r2, '真正兇手']].map(([n, r, nm]) => (
+          {[[1, r1, '犯案方式'], [2, r2, '真正兇手']].filter(([, r]) => r).map(([n, r, nm]) => (
             <div key={n} className="card" style={{ padding: '12px 16px', marginBottom: 10, fontSize: 14, lineHeight: 1.8 }}>
               <b>第{n === 1 ? '一' : '二'}關｜{nm}</b><br />
               學習分數 {fmt(r.learning)}・{res(r)}・完成 {r.done} 格・連線 {r.lines} 條<br />
