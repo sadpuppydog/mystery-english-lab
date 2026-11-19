@@ -29,7 +29,7 @@ export const STAGES = {
       { short: '鑑識紀錄', title: '教授桌邊的鑑識紀錄', photo: '教授桌邊的鑑識紀錄', image: '/clues/forensic-report.png', quote: '沒有明顯外傷，疑似吸入異常物質。', source: '鑑識報告・11/13 08:52', summary: '疑似吸入異常物質' },
       { short: '空氣警示燈', title: '實驗室空氣警示燈', photo: '實驗室的空氣警示燈', image: '/clues/red-alert.png', quote: '教授進入後，空氣才出現異常。', source: '警示紀錄・11/12 21:05', summary: '空氣在教授進入後才異常' },
       { short: '共用通風口', title: '實驗室與設備室共用通風口', photo: '天花板的共用通風口', image: '/clues/shared-ventilation.png', quote: '實驗室與設備室共用通風系統。', source: '建築平面圖・設備區', summary: '與設備室共用通風' },
-      { short: '通風運轉紀錄', title: '設備室通風運轉紀錄', photo: '設備室通風運轉曲線', image: '/clues/ventilation-status.png', quote: '案發時間，通風系統曾被啟動。', source: '設備運轉紀錄・11/12 21:12', summary: '案發時曾被啟動' },
+      { short: '通風運轉紀錄', title: '設備室通風運轉紀錄', photo: '設備室通風啟動狀態', image: '/clues/ventilation-status-simple.png', quote: '21:11 通風關閉；21:12 通風系統啟動。', source: '設備運轉紀錄・11/12 21:12', summary: '案發時曾被啟動' },
     ],
     question: '根據所有線索，你認為林教授的犯案方式是？',
     options: [
