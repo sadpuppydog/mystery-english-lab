@@ -61,7 +61,7 @@ export const STAGES = {
     clueTitle: '嫌疑人線索', folderTitle: '案件證據資料夾｜第二關 真正兇手',
     clues: [
       { short: '社團合照', title: '社團合照：案發時的英文社', photo: '英文社社團合照', image: '/clues/bingo2-english-club.png', quote: '社團合照證明，案發時 Alex 在英文社活動。', source: '社團活動紀錄・11/12 20:30', summary: 'Alex 案發時在英文社' },
-      { short: '監視器畫面', title: '走廊監視器畫面', photo: '走廊監視器畫面', quote: '監視器畫面證明 Emma 當晚的行蹤。', source: '監視器紀錄・11/12 21:00', summary: 'Emma 當晚行蹤已確認' },
+      { short: '監視器畫面', title: '走廊監視器畫面', photo: '走廊監視器畫面', image: '/clues/bingo2-emma-cctv.png', quote: '監視器畫面證明 Emma 當晚的行蹤。', source: '監視器紀錄・11/12 21:00', summary: 'Emma 當晚行蹤已確認' },
       { short: '通風啟動帳號', title: '通風系統的登入帳號', photo: '通風系統登入紀錄', quote: '設備室的通風系統，是用 Kevin 的帳號啟動的。', source: '系統操作紀錄・11/12 21:12', summary: '用 Kevin 的帳號啟動' },
       { short: '不在場證明', title: 'Kevin 的不在場證明', photo: '另一棟樓的門禁紀錄', quote: '案發時 Kevin 本人在另一棟樓。', source: '門禁紀錄・11/12 21:10', summary: 'Kevin 本人在另一棟樓' },
       { short: '設備室目擊', title: '設備室附近的目擊者', photo: '設備室附近的目擊紀錄', quote: '案發時，Sophia 曾出現在設備室附近。', source: '目擊證詞・11/12 21:08', summary: 'Sophia 出現在設備室附近' },
