@@ -63,7 +63,7 @@ export const STAGES = {
       { short: '社團合照', title: '社團合照：案發時的英文社', photo: '英文社社團合照', image: '/clues/bingo2-english-club.png', quote: '社團合照證明，通風啟動時 Alex 在英文社活動。', source: '社團活動紀錄・11/12 21:12', summary: 'Alex 案發時在英文社' },
       { short: '監視器畫面', title: '圖書館監視器畫面', photo: '圖書館大廳監視器畫面', image: '/clues/bingo2-emma-cctv.png', quote: '監視器畫面顯示，通風啟動時 Emma 在校園圖書館。', source: '圖書館監視器紀錄・11/12 21:12', summary: 'Emma 當晚在圖書館' },
       { short: '通風啟動帳號', title: '通風系統的登入帳號', photo: '設備室電腦上的通風系統登入紀錄', image: '/clues/bingo2-kevin-computer-log-2112.png', quote: '設備室的通風系統，是用 Kevin 的帳號啟動的。', source: '系統操作紀錄・11/12 21:12', summary: '用 Kevin 的帳號啟動' },
-      { short: '不在場證明', title: 'Kevin 的不在場證明', photo: '另一棟樓的大廳監視器與門禁紀錄', image: '/clues/bingo2-kevin-alibi-asleep.png', quote: '21:10 Kevin 進入工程大樓；21:12 的監視器拍到他在大廳坐著睡著。', source: '門禁與監視器紀錄・11/12 21:10–21:12', summary: 'Kevin 在另一棟樓睡著' },
+      { short: '不在場證明', title: 'Kevin 的不在場證明', photo: '工程大樓 B 管理室監視器與門禁紀錄', image: '/clues/bingo2-kevin-manager-office-asleep.png', quote: '21:10 Kevin 進入工程大樓 B；21:12 的監視器拍到他在自己的管理室坐著睡著。', source: '門禁與監視器紀錄・11/12 21:10–21:12', summary: 'Kevin 在自己的管理室睡著' },
       { short: '設備室目擊', title: '設備室附近的目擊者', photo: '設備室附近的目擊紀錄', quote: '案發時，Sophia 曾出現在設備室附近。', source: '目擊證詞・11/12 21:08', summary: 'Sophia 出現在設備室附近' },
     ],
     question: '根據所有線索，你認為真正的兇手是誰？',
