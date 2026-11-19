@@ -97,47 +97,22 @@ export function Reveal() {
   const S = STAGES[s.stage]; const R = S.reveal;
   const videoRef = useRef(null);
   const [videoDone, setVideoDone] = useState(false);
-  const total = s.stage === 1 ? 9 : 10;
-  const [t, setT] = useState(0);
-  useEffect(() => { if (s.stage === 1 || t >= total) return; const x = setTimeout(() => setT((v) => v + 0.25), 250); return () => clearTimeout(x); }, [s.stage, t]);
-  const n = s.stage === 1 ? R.scenes.length : R.suspects.length;
-  const shown = Math.min(n, Math.floor((t / total) * (n + 0.6)) + 1);
-  const done = s.stage === 1 ? videoDone : t >= total;
-  const sec = (v) => `0:${String(Math.floor(v * 5)).padStart(2, '0')}`;
   return (
     <div className="screen" style={{ background: 'rgba(10,6,3,.55)' }}>
       <div style={{ position: 'absolute', left: 60, right: 60, top: 40 }}>
         <div className="kicker" style={{ color: 'var(--gold2)' }}>{R.tag}</div>
         <div className="serif" style={{ fontSize: 34, fontWeight: 900, color: '#f3e6c8', marginTop: 6 }}>{R.title}</div>
       </div>
-      {s.stage === 1 ? (
-        <video ref={videoRef} className="reveal-video" controls preload="metadata" aria-label="第一關犯案方式揭曉影片"
-          onEnded={() => setVideoDone(true)}>
-          <source src="/videos/reveal-stage1.mp4" type="video/mp4" />
-          你的瀏覽器不支援影片播放。
-        </video>
-      ) : (
-      <div style={{ position: 'absolute', left: 60, right: 60, top: 140, display: 'grid', gridTemplateColumns: `repeat(${n}, 1fr)`, gap: 20 }}>
-        {R.suspects.map((p, i) => (
-          <div key={i} className={`panel scene ${i < shown ? 'on' : ''}`} style={{ padding: 16, border: p.verdict === '兇手' ? '3px solid var(--red)' : undefined }}>
-            <Photo label={p.name} h={170} />
-            <div className="row" style={{ marginTop: 12, justifyContent: 'space-between' }}>
-              <div><b className="serif" style={{ fontSize: 20 }}>{p.name}</b> <span className="small muted">{p.role}</span></div>
-              <span className={`pill ${p.verdict === '兇手' ? 'pill-red' : p.verdict === '被冒用' ? 'pill-gold' : 'pill-green'}`}>{p.verdict}</span>
-            </div>
-            <p className="small" style={{ marginTop: 8, lineHeight: 1.7, color: 'var(--ink2)' }}>{p.text}</p>
-          </div>
-        ))}
-      </div>
-      )}
+      <video ref={videoRef} className="reveal-video" controls preload="metadata"
+        aria-label={s.stage === 1 ? '第一關犯案方式揭曉影片' : '第二關兇手揭曉影片'}
+        onEnded={() => setVideoDone(true)}>
+        <source src={s.stage === 1 ? '/videos/reveal-stage1.mp4' : '/videos/reveal-stage2.mp4'} type="video/mp4" />
+        你的瀏覽器不支援影片播放。
+      </video>
       <div style={{ position: 'absolute', left: 60, right: 60, bottom: 40 }} className="row gap16">
-        {s.stage === 1 ? <span className="grow" /> : <>
-          <span className="small" style={{ color: '#e8dbbd' }}>{done ? '動畫播放完畢' : '動畫播放中'}</span>
-          <div className="reveal-bar grow"><i style={{ width: `${(t / total) * 100}%` }} /></div>
-          <span className="small" style={{ color: '#e8dbbd', width: 90 }}>{sec(t)} / {sec(total)}</span>
-        </>}
-        <button className="btn btn-ghost-light btn-sm" onClick={() => { if (s.stage === 1) { videoRef.current?.pause(); setVideoDone(true); } else setT(total); }} disabled={done}>略過</button>
-        <button className="btn btn-gold" disabled={!done} onClick={() => A.go('settle')}>{STAGES[s.stage].label}結算</button>
+        <span className="grow" />
+        <button className="btn btn-ghost-light btn-sm" onClick={() => { videoRef.current?.pause(); setVideoDone(true); }} disabled={videoDone}>略過</button>
+        <button className="btn btn-gold" disabled={!videoDone} onClick={() => A.go('settle')}>{STAGES[s.stage].label}結算</button>
       </div>
     </div>
   );
