@@ -96,10 +96,11 @@ export function Confirm({ title, text, okLabel = '確定', cancelLabel = '取消
 export function Photo({ label, src, w = '100%', h = 160, style }) {
   const character = ['Alex', 'Emma', 'Kevin', 'Sophia'].includes(label);
   const image = src || (character ? `/characters/${label}.png` : null);
+  const evidence = Boolean(src);
   return (
-    <div className="photo" style={{ width: w, height: h, ...style }}>
+    <div className="photo" style={{ width: w, height: evidence ? 'auto' : h, aspectRatio: evidence ? '16 / 9' : undefined, ...style }}>
       {image ? (
-        <img className="photo-character" src={image} alt={`${label} 的照片`} />
+        <img className={`photo-character${evidence ? ' photo-evidence' : ''}`} src={image} alt={`${label} 的照片`} />
       ) : (
         <><Icon name="photo" size={34} stroke={1.5} /><span>[照片：{label}]</span></>
       )}
