@@ -13,11 +13,14 @@ const EMPTY = { screen: 'login', params: {}, user: null, stage: 1, stages: {}, r
 
 export function GameProvider({ children }) {
   const [s, setS] = useState(() => {
-    if (new URLSearchParams(window.location.search).get('preview') !== 'clues') return EMPTY;
-    const stage = newStageState(1, 5);
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('preview') !== 'clues') return EMPTY;
+    const stageNumber = params.get('stage') === '2' ? 2 : 1;
+    const clueCount = STAGES[stageNumber].clues.length;
+    const stage = newStageState(stageNumber, clueCount);
     stage.learning = 1500;
-    stage.seenClues = 5;
-    return { ...EMPTY, screen: 'board', user: { account: 'clue-preview', name: '訪客', guest: true }, stages: { 1: stage } };
+    stage.seenClues = clueCount;
+    return { ...EMPTY, screen: 'board', stage: stageNumber, user: { account: 'clue-preview', name: '訪客', guest: true }, stages: { [stageNumber]: stage } };
   });
   const ref = useRef(s);
   ref.current = s;
