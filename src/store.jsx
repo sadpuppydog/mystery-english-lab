@@ -1,26 +1,62 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import {
-  newStageState, buildCellOrder, topicSet, afterScore, cellId, isEventId, openKeys,
+  newStageState, buildCellOrder, topicSet, afterScore, cellId, isEventId, openKeys, ALL_KEYS, shuffle,
   SCORE, HINT_COST, AI_COST, baseGameScore, doneCount, loadSave, writeSave, clearSave,
 } from './game.js';
-import { ITEMS } from './data/events.js';
+import { EVENTS, ITEMS } from './data/events.js';
 import { STAGES } from './data/story.js';
 
 const Ctx = createContext(null);
 export const useGame = () => useContext(Ctx);
 
 const EMPTY = { screen: 'login', params: {}, user: null, stage: 1, stages: {}, results: {}, modals: [] };
+const makeNumberMap = () => {
+  const numbers = shuffle(Array.from({ length: 25 }, (_, n) => n + 1));
+  return Object.fromEntries(ALL_KEYS.map((key, i) => [key, numbers[i]]));
+};
+const validNumberMap = (map) => {
+  const values = ALL_KEYS.map((key) => Number(map?.[key]));
+  return values.length === 25 && values.every((n) => Number.isInteger(n) && n >= 1 && n <= 25) && new Set(values).size === 25;
+};
+const makePreviewStage = (stageNumber, full = false) => {
+  const clueCount = STAGES[stageNumber].clues.length;
+  const stage = newStageState(stageNumber, clueCount);
+  stage.numberMap = makeNumberMap();
+  stage.learning = full ? 6000 : 1500;
+  stage.coins = full ? 999 : 0;
+  stage.items = full ? { magnifier: 9, glove: 9, coffee: 9 } : stage.items;
+  stage.seenClues = clueCount;
+  stage.notes = Object.fromEntries(Object.keys(EVENTS).map((id) => [id, true]));
+  return stage;
+};
 
 export function GameProvider({ children }) {
   const [s, setS] = useState(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('preview') !== 'clues') return EMPTY;
+    const preview = params.get('preview');
+    if (!['clues', 'full', 'numbers'].includes(preview)) return EMPTY;
     const stageNumber = params.get('stage') === '2' ? 2 : 1;
-    const clueCount = STAGES[stageNumber].clues.length;
-    const stage = newStageState(stageNumber, clueCount);
-    stage.learning = 1500;
-    stage.seenClues = clueCount;
-    return { ...EMPTY, screen: 'board', stage: stageNumber, user: { account: 'clue-preview', name: '訪客', guest: true }, stages: { [stageNumber]: stage } };
+    if (preview === 'numbers') {
+      const clueCount = STAGES[stageNumber].clues.length;
+      return {
+        ...EMPTY,
+        screen: 'numberSetup',
+        stage: stageNumber,
+        user: { account: 'number-preview', name: '號碼測試', guest: true },
+        stages: { [stageNumber]: newStageState(stageNumber, clueCount) },
+      };
+    }
+    if (preview === 'full') {
+      return {
+        ...EMPTY,
+        screen: 'board',
+        stage: stageNumber,
+        fullPreview: true,
+        user: { account: 'full-preview', name: '滿分預覽', guest: true },
+        stages: { 1: makePreviewStage(1, true), 2: makePreviewStage(2, true) },
+      };
+    }
+    return { ...EMPTY, screen: 'board', stage: stageNumber, user: { account: 'clue-preview', name: '訪客', guest: true }, stages: { [stageNumber]: makePreviewStage(stageNumber) } };
   });
   const ref = useRef(s);
   ref.current = s;
@@ -39,6 +75,7 @@ export function GameProvider({ children }) {
 
     // ---- 導覽 ----
     go: (screen, params = {}) => update((d) => { d.screen = screen; d.params = params; }),
+    switchPreviewStage: (stage) => update((d) => { if (d.fullPreview && d.stages[stage]) { d.stage = stage; d.screen = 'board'; d.params = {}; d.modals = []; } }),
     popModal: () => update((d) => { d.modals.shift(); }),
     pushModal: (m) => update((d) => { d.modals.push(m); }),
 
@@ -46,6 +83,9 @@ export function GameProvider({ children }) {
     login: (user) => update((d) => {
       const saved = user.guest ? null : loadSave(user.account);
       if (saved && saved.stages && Object.keys(saved.stages).length) {
+        Object.values(saved.stages).forEach((stage) => {
+          if (!validNumberMap(stage.numberMap)) stage.numberMap = makeNumberMap();
+        });
         Object.assign(d, saved, { user, modals: [], screen: 'home', params: {} });
       } else {
         Object.assign(d, EMPTY, { user, screen: 'home' });
@@ -66,10 +106,20 @@ export function GameProvider({ children }) {
     chooseClues: (n) => update((d) => {
       const prev = d.stage === 2 && d.stages[1] ? d.stages[1].pick : null;
       d.stages[d.stage] = newStageState(d.stage, n, prev);
+      d.screen = 'numberSetup'; d.params = {};
+    }),
+
+    confirmNumberMap: (map) => update((d) => {
+      if (!validNumberMap(map)) return;
+      d.stages[d.stage].numberMap = Object.fromEntries(ALL_KEYS.map((key) => [key, Number(map[key])]));
       d.screen = 'board'; d.params = {};
     }),
 
-    // ---- 抽格子 ----
+    // ---- 抽數字 ----
+    pickRandomNumber: () => {
+      const keys = openKeys(ref.current.stages[ref.current.stage]);
+      return keys.length ? keys[Math.floor(Math.random() * keys.length)] : null;
+    },
     pickRandomCell: () => {
       const keys = openKeys(ref.current.stages[ref.current.stage]);
       return keys.length ? keys[Math.floor(Math.random() * keys.length)] : null;

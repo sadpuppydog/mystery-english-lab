@@ -68,6 +68,7 @@ export function newStageState(stage, clueCount, prevPick) {
   ALL_KEYS.forEach((k) => { cells[k] = { status: 'open' }; });
   return {
     stage, clueCount, pick, cells,
+    numberMap: null,
     eventSet: stage === 1 ? 'A' : 'B',
     learning: 0, coins: 0, assist: ASSIST_START,
     items: { magnifier: 0, glove: 0, coffee: 0 },

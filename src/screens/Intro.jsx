@@ -173,7 +173,7 @@ export function Mission() {
             <span>可得遊戲分數（猜錯／猜對）</span><b className="serif">{baseGameScore(n)} ／ {baseGameScore(n) + 200}</b>
           </div>
         </div>
-        <button className="btn btn-dark" style={{ marginTop: 'auto' }} onClick={() => A.chooseClues(n)}>進入 {S.bingo}</button>
+        <button className="btn btn-dark" style={{ marginTop: 'auto' }} onClick={() => A.chooseClues(n)}>下一步：安排 1–25</button>
       </div>
     </div>
   );

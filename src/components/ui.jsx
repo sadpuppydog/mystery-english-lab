@@ -49,15 +49,19 @@ export function Stage({ children }) {
 export function Background() {
   return (
     <div className="bg">
-      <div className="deco folder" style={{ left: -60, top: 430, transform: 'rotate(-8deg)' }} />
-      <div className="deco paper" style={{ left: 980, top: 520, transform: 'rotate(7deg)' }} />
-      <div className="deco polaroid" style={{ left: 930, top: -30, transform: 'rotate(8deg)' }}><i /></div>
-      <div className="deco polaroid" style={{ left: 1100, top: 40, transform: 'rotate(-6deg)' }}><i /></div>
-      <div className="deco polaroid" style={{ left: 30, top: 60, transform: 'rotate(-10deg)' }}><i /></div>
-      <div className="deco paper" style={{ left: 260, top: 40, transform: 'rotate(4deg)' }} />
-      <div className="deco pin" style={{ left: 1000, top: -6 }} />
-      <div className="deco pin" style={{ left: 1165, top: 50 }} />
-      <div className="deco string" style={{ left: 1006, top: 0, width: 170, transform: 'rotate(18deg)' }} />
+      <div className="deco report" style={{ left: -36, top: 525, transform: 'rotate(7deg)' }} />
+      <div className="deco paper" style={{ left: 18, top: 28, transform: 'rotate(4deg)' }} />
+      <div className="deco polaroid" style={{ left: 215, top: 58, transform: 'rotate(-8deg)' }}><i /></div>
+      <div className="deco tag" style={{ left: 650, top: 22, transform: 'rotate(-13deg)' }}>A101</div>
+      <div className="deco polaroid" style={{ left: 930, top: 32, transform: 'rotate(5deg)' }}><i /></div>
+      <div className="deco polaroid" style={{ left: 1070, top: -18, transform: 'rotate(-7deg)' }}><i /></div>
+      <div className="deco polaroid" style={{ left: 1190, top: 35, transform: 'rotate(3deg)' }}><i /></div>
+      <div className="deco paper" style={{ left: 1040, top: 140, transform: 'rotate(7deg)' }} />
+      <div className="deco paper" style={{ left: 930, top: 535, transform: 'rotate(-8deg)' }} />
+      <div className="deco lens" style={{ left: 750, top: 625 }} />
+      <div className="deco pin" style={{ left: 1000, top: 35 }} />
+      <div className="deco pin" style={{ left: 1165, top: 45 }} />
+      <div className="deco string" style={{ left: 1006, top: 40, width: 170, transform: 'rotate(12deg)' }} />
     </div>
   );
 }

@@ -67,15 +67,14 @@ export default function Auth() {
 
   return (
     <div className="screen">
-      <div style={{ position: 'absolute', left: 110, top: 220, width: 540 }}>
-        <div className="kicker light" style={{ color: '#c9b48a', marginBottom: 18 }}>CASE FILE No.1112</div>
-        <div className="serif" style={{ fontSize: 60, fontWeight: 900, color: '#f3e6c8', lineHeight: 1.15, textShadow: '0 3px 10px rgba(0,0,0,.6)' }}>英語實驗室<br />密室命案</div>
-        <div style={{ fontSize: 13, letterSpacing: 4.5, color: '#c9b48a', marginTop: 14 }}>{GAME_SUB}</div>
-        <div style={{ width: 80, height: 2, background: 'var(--red)', margin: '22px 0' }} />
-        <p style={{ color: '#e8dbbd', fontSize: 18, lineHeight: 1.8 }}>用英文，找出真相。<br />完成 Grammar Bingo，蒐集證據，破解林教授之死。</p>
+      <div style={{ position: 'absolute', left: 90, top: 238, width: 540 }}>
+        <div className="serif auth-title">英語實驗室<br />密室命案</div>
+        <div className="auth-subtitle">{GAME_SUB}</div>
+        <div className="auth-rule" />
+        <p className="auth-copy">用英文，找出真相。<br />完成 Grammar Bingo，蒐集證據，破解林教授之死。</p>
       </div>
 
-      <div className="panel" style={{ position: 'absolute', left: 730, top: 110 + (mode === 'register' ? -40 : 0), width: 470, padding: '26px 35px 30px', background: 'var(--paper2)' }}>
+      <div className="panel auth-panel" style={{ position: 'absolute', left: 720, top: mode === 'register' ? 62 : mode === 'forgot' ? 150 : 149, width: 470, padding: '26px 35px 32px' }}>
         {done?.kind === 'register' && (
           <div>
             <div className="h2" style={{ marginBottom: 8 }}>註冊成功</div>
@@ -103,12 +102,26 @@ export default function Auth() {
           <form onSubmit={(e) => { e.preventDefault(); doLogin(); }}>
             <Field label="帳號" value={f.account} onChange={set('account')} placeholder="輸入學號或 Email" error={err.account} autoFocus />
             <Field label="密碼" type="password" value={f.password} onChange={set('password')} placeholder="輸入密碼" error={err.password} />
-            <div className="row" style={{ justifyContent: 'space-between', marginBottom: 16 }}>
-              <span className="small muted">示範帳號 {DEMO.account} / {DEMO.password}</span>
+            <div className="row" style={{ justifyContent: 'flex-end', marginBottom: 18 }}>
               <button type="button" className="link" onClick={() => switchTo('forgot')}>忘記密碼？</button>
             </div>
             <button className="btn btn-dark btn-block" type="submit" disabled={fails >= 5}>{fails ? '再試一次' : '進入調查'}</button>
-            <button type="button" className="btn btn-line btn-block btn-sm" style={{ marginTop: 10 }} onClick={() => A.login({ account: 'guest', name: '訪客', guest: true })}>訪客試玩（不存檔）</button>
+            <button
+              type="button"
+              className="btn btn-line btn-block btn-sm"
+              style={{ marginTop: 10 }}
+              onClick={() => A.login({ account: 'guest', name: '訪客', guest: true })}
+            >
+              訪客試玩（不存檔）
+            </button>
+            <button
+              type="button"
+              className="btn btn-line btn-block btn-sm"
+              style={{ marginTop: 8 }}
+              onClick={() => window.location.assign('?preview=full')}
+            >
+              滿分預覽（全部內容解鎖）
+            </button>
           </form>
         )}
 

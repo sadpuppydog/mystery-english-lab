@@ -34,11 +34,14 @@ export default function Board() {
   const canReason = st.learning >= REASON_THRESHOLD && !reasoned;
   const lineKeys = new Set(LINES.filter((l) => st.lines.includes(l.id)).flatMap((l) => l.keys));
   const pending = st.pendingDraw;
+  const fullPreview = !!s.fullPreview;
 
-  // ---- 抽格子動畫 ----
+  const numberMap = st.numberMap || {};
+
+  // ---- 抽數字動畫 ----
   const draw = () => {
     if (drawing || !open.length) return;
-    const target = A.pickRandomCell();
+    const target = A.pickRandomNumber();
     setDrawing(true); setLanded(null);
     let t = 0; const steps = 14;
     for (let i = 0; i < steps; i++) {
@@ -62,6 +65,8 @@ export default function Board() {
   const onCell = (key) => {
     if (drawing) return;
     const c = st.cells[key]; const id = cellId(key);
+    if (fullPreview && isEventId(id)) { A.go('eventIntro', { key }); return; }
+    if (fullPreview && c.status === 'open') { A.startCell(key); return; }
     if (c.status === 'done') {
       if (isEventId(id)) setOverlay({ alert: { title: '事件已完成', text: `事件紙條已放進背包：\n「${EVENTS[id].note}」` } });
       else A.go('review', { key });
@@ -69,7 +74,7 @@ export default function Board() {
     else if (c.status === 'skip') A.go('eventIntro', { key });
     else if (c.status === 'progress') A.startCell(key);
     else if (c.status === 'event') A.startEvent(key);
-    else setToast('格子由「抽格子」隨機決定，按右下角的按鈕抽一格吧！');
+    else setToast('格子由「抽數字」決定，按右下角的按鈕抽出下一個號碼吧！');
   };
 
   const clues = stageClues(s.stage, st.clueCount);
@@ -94,6 +99,10 @@ export default function Board() {
           <span className="board-title">{S.bingo}</span>
           <span className="pill pill-gold">已挑戰 {challengedCount(st)} / 25</span>
           <span className="pill pill-green">Bingo 連線 {st.lines.length} 條</span>
+          {fullPreview && <div className="row gap8" style={{ marginLeft: 'auto' }}>
+            <button className={`btn btn-sm ${s.stage === 1 ? 'btn-dark' : 'btn-line'}`} onClick={() => A.switchPreviewStage(1)}>第一關</button>
+            <button className={`btn btn-sm ${s.stage === 2 ? 'btn-red' : 'btn-line'}`} onClick={() => A.switchPreviewStage(2)}>第二關</button>
+          </div>}
         </div>
         <div className="grid">
           <div />
@@ -115,6 +124,7 @@ export default function Board() {
                   lineKeys.has(key) ? 'in-line' : '', cell.status !== 'open' ? 'clickable' : ''].join(' ');
                 return (
                   <button key={key} className={cls} onClick={() => onCell(key)} aria-label={`${cellLabel(key)} ${nm.zh}`}>
+                    <span className="cell-number">{numberMap[key]}</span>
                     {nm.en && <span className="en-name">{nm.en}</span>}
                     <span className="zh-name">{nm.zh}</span>
                     {stateText && <span className="state">{stateText}</span>}
@@ -132,12 +142,14 @@ export default function Board() {
           <span><i style={{ background: '#dcc9b4', borderColor: 'var(--red)' }} />失敗</span>
         </div>
         <div className="draw-area">
-          {endAction ? (
+          {fullPreview ? (
+            <span className="pill pill-gold">滿分預覽：直接點任意格開始挑戰</span>
+          ) : endAction ? (
             <button className="draw-btn" onClick={endAction.go}><Icon name="info" />{endAction.label}</button>
           ) : (
             <>
-              <span className="draw-hint">{open.length ? `剩 ${open.length} 格未抽` : '格子已全部挑戰'}</span>
-              <button className="draw-btn" onClick={draw} disabled={drawing || !open.length || !!pending}><Icon name="dice" size={20} />{drawing ? '抽格子中…' : '抽格子'}</button>
+              <span className="draw-hint">{open.length ? `剩 ${open.length} 個號碼未抽` : '號碼已全部挑戰'}</span>
+              <button className="draw-btn" onClick={draw} disabled={drawing || !open.length || !!pending}><Icon name="dice" size={20} />{drawing ? '抽號碼中…' : '抽數字'}</button>
             </>
           )}
         </div>
@@ -189,14 +201,15 @@ export default function Board() {
         return (
           <Modal width={500}>
             <div className="center">
-              <div className="kicker" style={{ marginBottom: 8 }}>抽格子結果</div>
-              <div className="serif" style={{ fontSize: 46, fontWeight: 900, color: ev ? 'var(--red)' : 'var(--ink)' }}>{cellLabel(pending)}</div>
+              <div className="kicker" style={{ marginBottom: 8 }}>抽數字結果</div>
+              <div className="serif" style={{ fontSize: 68, fontWeight: 900, lineHeight: 1, color: ev ? 'var(--red)' : 'var(--ink)' }}>{numberMap[pending]}</div>
+              <div className="small muted" style={{ marginTop: 8 }}>這個數字放在 {cellLabel(pending)}</div>
               <div className="h2" style={{ margin: '4px 0 6px' }}>{ev ? `${EVENTS[id].name}・${EVENTS[id].title}` : nm.zh}</div>
               {nm.en && <div className="en muted" style={{ fontSize: 17 }}>{nm.en}</div>}
               <p className="small" style={{ color: 'var(--ink2)', margin: '16px 0 22px' }}>
-                {ev ? '抽到事件格！可以選擇接受挑戰或略過。' : '一般文法格：共 3 題，每題答完立即判斷，答錯即失敗。'}
+                {ev ? '抽到事件格！必須完成這一格的事件挑戰，完成前不能抽下一個號碼。' : '抽到這一格後必須完成 3 題挑戰，完成前不能抽下一個號碼。'}
               </p>
-              <button className={`btn btn-block ${ev ? 'btn-red' : 'btn-dark'}`} onClick={() => enterDrawn(pending)}>{ev ? '查看事件' : '開始挑戰'}</button>
+              <button className={`btn btn-block ${ev ? 'btn-red' : 'btn-dark'}`} onClick={() => enterDrawn(pending)}>{ev ? '開始事件挑戰' : '開始這格題目'}</button>
             </div>
           </Modal>
         );
