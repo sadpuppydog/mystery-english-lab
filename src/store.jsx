@@ -21,7 +21,8 @@ const validNumberMap = (map) => {
 const makePreviewStage = (stageNumber, full = false) => {
   const clueCount = STAGES[stageNumber].clues.length;
   const stage = newStageState(stageNumber, clueCount);
-  stage.numberMap = makeNumberMap();
+  // 滿分預覽仍要讓玩家親自安排 1–25；線索預覽則直接提供可查看的盤面。
+  stage.numberMap = full ? null : makeNumberMap();
   stage.learning = full ? 6000 : 1500;
   stage.coins = full ? 999 : 0;
   stage.items = full ? { magnifier: 9, glove: 9, coffee: 9 } : stage.items;
@@ -49,7 +50,7 @@ export function GameProvider({ children }) {
     if (preview === 'full') {
       return {
         ...EMPTY,
-        screen: 'board',
+        screen: 'numberSetup',
         stage: stageNumber,
         fullPreview: true,
         user: { account: 'full-preview', name: '滿分預覽', guest: true },
@@ -75,7 +76,14 @@ export function GameProvider({ children }) {
 
     // ---- 導覽 ----
     go: (screen, params = {}) => update((d) => { d.screen = screen; d.params = params; }),
-    switchPreviewStage: (stage) => update((d) => { if (d.fullPreview && d.stages[stage]) { d.stage = stage; d.screen = 'board'; d.params = {}; d.modals = []; } }),
+    switchPreviewStage: (stage) => update((d) => {
+      if (d.fullPreview && d.stages[stage]) {
+        d.stage = stage;
+        d.screen = validNumberMap(d.stages[stage].numberMap) ? 'board' : 'numberSetup';
+        d.params = {};
+        d.modals = [];
+      }
+    }),
     popModal: () => update((d) => { d.modals.shift(); }),
     pushModal: (m) => update((d) => { d.modals.push(m); }),
 

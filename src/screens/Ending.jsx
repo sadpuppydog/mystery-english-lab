@@ -97,6 +97,10 @@ export function Reveal() {
   const S = STAGES[s.stage]; const R = S.reveal;
   const videoRef = useRef(null);
   const [videoDone, setVideoDone] = useState(false);
+  const skipVideo = () => {
+    videoRef.current?.pause();
+    A.go('settle');
+  };
   return (
     <div className="screen" style={{ background: 'rgba(10,6,3,.55)' }}>
       <div style={{ position: 'absolute', left: 60, right: 60, top: 40 }}>
@@ -111,7 +115,7 @@ export function Reveal() {
       </video>
       <div style={{ position: 'absolute', left: 60, right: 60, bottom: 40 }} className="row gap16">
         <span className="grow" />
-        <button className="btn btn-ghost-light btn-sm" onClick={() => { videoRef.current?.pause(); setVideoDone(true); }} disabled={videoDone}>略過</button>
+        <button className="btn btn-ghost-light btn-sm" onClick={skipVideo}>略過</button>
         <button className="btn btn-gold" disabled={!videoDone} onClick={() => A.go('settle')}>{STAGES[s.stage].label}結算</button>
       </div>
     </div>

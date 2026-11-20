@@ -65,8 +65,6 @@ export default function Board() {
   const onCell = (key) => {
     if (drawing) return;
     const c = st.cells[key]; const id = cellId(key);
-    if (fullPreview && isEventId(id)) { A.go('eventIntro', { key }); return; }
-    if (fullPreview && c.status === 'open') { A.startCell(key); return; }
     if (c.status === 'done') {
       if (isEventId(id)) setOverlay({ alert: { title: '事件已完成', text: `事件紙條已放進背包：\n「${EVENTS[id].note}」` } });
       else A.go('review', { key });
@@ -143,7 +141,12 @@ export default function Board() {
         </div>
         <div className="draw-area">
           {fullPreview ? (
-            <span className="pill pill-gold">滿分預覽：直接點任意格開始挑戰</span>
+            <>
+              <span className="draw-hint">滿分預覽：剩 {open.length} 個號碼未抽，只有抽中的格子可以挑戰</span>
+              <button className="draw-btn" onClick={draw} disabled={drawing || !open.length || !!pending}>
+                <Icon name="dice" size={20} />{drawing ? '抽號碼中…' : '抽數字做題目'}
+              </button>
+            </>
           ) : endAction ? (
             <button className="draw-btn" onClick={endAction.go}><Icon name="info" />{endAction.label}</button>
           ) : (
