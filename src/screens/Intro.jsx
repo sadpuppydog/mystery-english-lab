@@ -58,7 +58,7 @@ export function Prologue() {
           <div className="kicker">PROLOGUE・開場動畫</div>
           <div className="small muted">{PROLOGUE.time}</div>
           <video className="prologue-video" controls preload="metadata" aria-label="遊戲前導影片">
-            <source src="/videos/prologue.mp4" type="video/mp4" />
+            <source src={`${import.meta.env.BASE_URL}videos/prologue.mp4`} type="video/mp4" />
             你的瀏覽器不支援影片播放。
           </video>
           <p className="pre" style={{ fontSize: 16, lineHeight: 1.85 }}>{PROLOGUE.text}</p>
