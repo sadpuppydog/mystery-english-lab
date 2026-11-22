@@ -99,7 +99,8 @@ export function Confirm({ title, text, okLabel = '確定', cancelLabel = '取消
 
 export function Photo({ label, src, w = '100%', h = 160, style }) {
   const character = ['Alex', 'Emma', 'Kevin', 'Sophia'].includes(label);
-  const image = src || (character ? `/characters/${label}.png` : null);
+  const rawImage = src || (character ? `/characters/${label}.png` : null);
+  const image = rawImage?.startsWith('/') ? `${import.meta.env.BASE_URL}${rawImage.slice(1)}` : rawImage;
   const evidence = Boolean(src);
   return (
     <div className="photo" style={{ width: w, height: evidence ? 'auto' : h, aspectRatio: evidence ? '16 / 9' : undefined, ...style }}>
