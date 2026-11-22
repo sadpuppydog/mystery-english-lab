@@ -37,6 +37,7 @@ export function GameProvider({ children }) {
     const preview = params.get('preview');
     if (!['clues', 'full', 'numbers'].includes(preview)) return EMPTY;
     const stageNumber = params.get('stage') === '2' ? 2 : 1;
+    const startFullDemo = params.get('start') === '1';
     if (preview === 'numbers') {
       const clueCount = STAGES[stageNumber].clues.length;
       return {
@@ -50,7 +51,7 @@ export function GameProvider({ children }) {
     if (preview === 'full') {
       return {
         ...EMPTY,
-        screen: 'prologue',
+        screen: startFullDemo ? 'prologue' : 'login',
         stage: stageNumber,
         fullPreview: true,
         user: { account: 'full-preview', name: '滿分預覽', guest: true },
