@@ -50,7 +50,7 @@ export function GameProvider({ children }) {
     if (preview === 'full') {
       return {
         ...EMPTY,
-        screen: 'numberSetup',
+        screen: 'prologue',
         stage: stageNumber,
         fullPreview: true,
         user: { account: 'full-preview', name: '滿分預覽', guest: true },
