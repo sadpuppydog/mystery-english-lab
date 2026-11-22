@@ -110,7 +110,7 @@ export function Reveal() {
       <video ref={videoRef} className="reveal-video" controls preload="metadata"
         aria-label={s.stage === 1 ? '第一關犯案方式揭曉影片' : '第二關兇手揭曉影片'}
         onEnded={() => setVideoDone(true)}>
-        <source src={s.stage === 1 ? '/videos/reveal-stage1.mp4' : '/videos/reveal-stage2.mp4'} type="video/mp4" />
+        <source src={s.stage === 1 ? `${import.meta.env.BASE_URL}videos/reveal-stage1.mp4` : `${import.meta.env.BASE_URL}videos/reveal-stage2.mp4`} type="video/mp4" />
         你的瀏覽器不支援影片播放。
       </video>
       <div style={{ position: 'absolute', left: 60, right: 60, bottom: 40 }} className="row gap16">
