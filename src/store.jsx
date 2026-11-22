@@ -112,8 +112,13 @@ export function GameProvider({ children }) {
 
     // ---- 關卡開始 ----
     chooseClues: (n) => update((d) => {
-      const prev = d.stage === 2 && d.stages[1] ? d.stages[1].pick : null;
-      d.stages[d.stage] = newStageState(d.stage, n, prev);
+      if (d.fullPreview) {
+        // 滿分 Demo 經過開場與任務頁後，仍保留全部線索、紙條、道具與滿分資源。
+        d.stages[d.stage] = makePreviewStage(d.stage, true);
+      } else {
+        const prev = d.stage === 2 && d.stages[1] ? d.stages[1].pick : null;
+        d.stages[d.stage] = newStageState(d.stage, n, prev);
+      }
       d.screen = 'numberSetup'; d.params = {};
     }),
 
