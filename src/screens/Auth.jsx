@@ -118,7 +118,7 @@ export default function Auth() {
               type="button"
               className="btn btn-line btn-block btn-sm"
               style={{ marginTop: 8 }}
-              onClick={() => window.location.assign('?preview=full')}
+              onClick={() => window.location.assign('?preview=full&start=1')}
             >
               滿分預覽（全部內容解鎖）
             </button>
