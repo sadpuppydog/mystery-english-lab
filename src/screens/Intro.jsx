@@ -50,12 +50,12 @@ export function Home() {
 }
 
 export function Prologue() {
-  const { A } = useGame();
+  const { s, A } = useGame();
   return (
     <div className="screen">
       <div className="panel" style={{ position: 'absolute', left: 60, top: 40, width: 1160, height: 640, padding: '30px 40px', display: 'grid', gridTemplateColumns: '640px 1fr', gap: 36 }}>
         <div className="col gap16">
-          <div className="kicker">PROLOGUE・開場動畫</div>
+          <div className="kicker">{s.fullPreview ? 'FULL DEMO・滿分模式・開場動畫' : 'PROLOGUE・開場動畫'}</div>
           <div className="small muted">{PROLOGUE.time}</div>
           <video className="prologue-video" controls preload="metadata" aria-label="遊戲前導影片">
             <source src={`${import.meta.env.BASE_URL}videos/prologue.mp4`} type="video/mp4" />
